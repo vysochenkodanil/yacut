@@ -10,3 +10,6 @@ migrate = Migrate(app, db)
 
 
 from yacut import error_handlers, views, api_views
+
+
+error_handlers.register_error_handlers(app)
