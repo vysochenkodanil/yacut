@@ -1,11 +1,8 @@
-from flask import render_template, redirect, url_for, flash
-from . import app, db
-from .utils import get_unique_short_id
-from flask import current_app as app
 from flask import Blueprint, render_template, flash, redirect, url_for
+from yacut import db
+from yacut.models import URLMap
 from yacut.forms import URLForm
-from yacut.models import  URLMap
-
+from .utils import get_unique_short_id
 
 bp = Blueprint('views', __name__)
 
@@ -32,10 +29,11 @@ def index_view():
     db.session.commit()
     
     # Передача полного URL в шаблон
-    short_url = url_for('redirect_view', short=custom_id, _external=True)
+    short_url = url_for('views.redirect_view', short=custom_id, _external=True)  # Изменено имя endpoint
     return render_template('index.html', form=form, short_url=short_url)
 
-@app.route('/<short>')
+# Исправлено: используем bp вместо app
+@bp.route('/<short>')
 def redirect_view(short):
     url_map = URLMap.query.filter_by(short=short).first_or_404()
     return redirect(url_map.original)
