@@ -1,12 +1,15 @@
 from flask import render_template, redirect, url_for, flash
 from . import app, db
-from .forms import URLForm
-from .models import URLMap
 from .utils import get_unique_short_id
 from flask import current_app as app
+from flask import Blueprint, render_template, flash, redirect, url_for
+from yacut.forms import URLForm
+from yacut.models import  URLMap
 
 
-@app.route('/', methods=['GET', 'POST'])
+bp = Blueprint('views', __name__)
+
+@bp.route('/', methods=['GET', 'POST'])
 def index_view():
     form = URLForm()
     if not form.validate_on_submit():

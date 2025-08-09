@@ -5,10 +5,14 @@ from .utils import get_unique_short_id
 from .error_handlers import InvalidAPIUsage
 
 
-api = Blueprint('api', __name__)
 
-@api.route('/id/', methods=['POST'])
-def create_id():
+
+
+
+bp_api = Blueprint('api', __name__)
+
+@bp_api.route('/api/id/', methods=['POST'])
+def create_short_url():
     data = request.get_json()
     if not data:
         raise InvalidAPIUsage('Отсутствует тело запроса')
@@ -34,7 +38,7 @@ def create_id():
         'short_link': request.host_url + custom_id
     }), 201
 
-@api.route('/id/<string:short_id>/', methods=['GET'])
+@bp_api.route('/id/<string:short_id>/', methods=['GET'])
 def get_url(short_id):
     url_map = URLMap.query.filter_by(short=short_id).first()
     if not url_map:
