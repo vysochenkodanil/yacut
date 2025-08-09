@@ -1,6 +1,15 @@
+import re
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, URL, Length, Optional, ValidationError
+from wtforms.validators import (
+    DataRequired,
+    Length,
+    Optional,
+    URL,
+    ValidationError,
+)
+
 from .models import URLMap
 
 
@@ -23,7 +32,9 @@ class URLForm(FlaskForm):
 
     def validate_custom_id(self, field):
         if field.data:
-            if not all(char.isalnum() for char in field.data):
-                raise ValidationError('Только буквы и цифры')
+            if not re.fullmatch(r'[A-Za-z0-9]+', field.data):
+                raise ValidationError('Только латинские буквы и цифры')
             if URLMap.query.filter_by(short=field.data).first():
-                raise ValidationError('Имя уже занято')
+                raise ValidationError(
+                    'Предложенный вариант короткой ссылки уже существует.'
+                )
