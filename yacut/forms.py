@@ -1,16 +1,11 @@
-import re
-
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import (
-    DataRequired,
-    Length,
-    Optional,
-    URL,
-    ValidationError,
-)
+from wtforms.validators import (URL, DataRequired, Length, Optional,
+                                ValidationError)
 
-from .models import URLMap
+from settings import MAX_LEIGHT
+
+from .utils import validate_short_id
 
 
 class URLForm(FlaskForm):
@@ -25,16 +20,14 @@ class URLForm(FlaskForm):
         'Ваш вариант короткой ссылки',
         validators=[
             Optional(),
-            Length(max=16, message='Максимум 16 символов'),
+            Length(max=MAX_LEIGHT, message=f'Максимум {MAX_LEIGHT} символов')
         ]
     )
     submit = SubmitField('Создать')
 
     def validate_custom_id(self, field):
         if field.data:
-            if not re.fullmatch(r'[A-Za-z0-9]+', field.data):
-                raise ValidationError('Только латинские буквы и цифры')
-            if URLMap.query.filter_by(short=field.data).first():
-                raise ValidationError(
-                    'Предложенный вариант короткой ссылки уже существует.'
-                )
+            try:
+                validate_short_id(field.data)
+            except ValueError as e:
+                raise ValidationError(str(e))

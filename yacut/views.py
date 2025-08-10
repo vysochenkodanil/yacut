@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, redirect, render_template, url_for
+
 from yacut import db
-from .models import URLMap
+
 from .forms import URLForm
+from .models import URLMap
 from .utils import get_unique_short_id
 
 bp = Blueprint('views', __name__)

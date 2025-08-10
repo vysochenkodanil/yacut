@@ -1,10 +1,13 @@
+from http import HTTPStatus
+
 from flask import jsonify, render_template, request
 from werkzeug.exceptions import HTTPException
+
 from . import app
 
 
 class InvalidAPIUsage(Exception):
-    status_code = 400
+    status_code = HTTPStatus.BAD_REQUEST
 
     def __init__(self, message, status_code=None, payload=None):
         super().__init__()
@@ -14,15 +17,17 @@ class InvalidAPIUsage(Exception):
         self.payload = payload
 
     def to_dict(self):
-        rv = dict(self.payload or ())
-        rv['message'] = self.message
-        return rv
+        error_data = dict(self.payload or ())
+        error_data['message'] = self.message
+        return error_data
 
 
 def page_not_found(error):
     if request.path.startswith('/api/'):
-        return jsonify({'message': 'Указанный id не найден'}), 404
-    return render_template('404.html'), 404
+        return jsonify(
+            {'message': 'Указанный id не найден'}
+        ), HTTPStatus.NOT_FOUND
+    return render_template('404.html'), HTTPStatus.NOT_FOUND
 
 
 def invalid_api_usage(error):
@@ -37,12 +42,12 @@ def handle_exception(error):
         return jsonify({
             'message': 'Internal Server Error',
             'error': str(error)
-        }), 500
+        }), HTTPStatus.INTERNAL_SERVER_ERROR
 
-    return render_template('500.html'), 500
+    return render_template('500.html'), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def register_error_handlers(app):
-    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(HTTPStatus.NOT_FOUND, page_not_found)
     app.register_error_handler(InvalidAPIUsage, invalid_api_usage)
     app.register_error_handler(Exception, handle_exception)
