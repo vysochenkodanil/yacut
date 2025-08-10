@@ -34,14 +34,14 @@ YaCut - это веб-сервис для создания коротких пс
 
     Клонируйте репозиторий:
 
-bash
+
 
 git clone https://github.com/vysochenkodanil/yacut.git
 cd yacut
 
     Создайте и активируйте виртуальное окружение:
 
-bash
+
 
 python -m venv venv
 source venv/bin/activate  # Linux/MacOS
@@ -49,14 +49,14 @@ venv\Scripts\activate  # Windows
 
     Установите зависимости:
 
-bash
+
 
 pip install -r requirements.txt
 
     Настройте окружение:
     Создайте файл .env в корне проекта:
 
-ini
+
 
 FLASK_APP=yacut
 FLASK_ENV=development
@@ -65,15 +65,12 @@ SECRET_KEY=your-secret-key
 
     Инициализируйте базу данных:
 
-bash
 
 flask db init
 flask db migrate
 flask db upgrade
 
     Запустите сервер:
-
-bash
 
 flask run
 
@@ -87,11 +84,3 @@ API
 bash
 
 curl -X POST -H "Content-Type: application/json" -d '{"url":"https://example.com/long-url"}' http://localhost:5000/api/id/
-
-Ответ:
-json
-
-{
-  "url": "https://example.com/long-url",
-  "short_link": "http://localhost:5000/abc123"
-}
