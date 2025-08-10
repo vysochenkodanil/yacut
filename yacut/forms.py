@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import (URL, DataRequired, Length, Optional,
-                                ValidationError)
-
+from wtforms.validators import (
+    DataRequired,
+    Length,
+    Optional,
+    URL,
+    ValidationError,
+)
 from settings import MAX_LEIGHT
-
 from .utils import validate_short_id
 
 
@@ -30,4 +33,13 @@ class URLForm(FlaskForm):
             try:
                 validate_short_id(field.data)
             except ValueError as e:
-                raise ValidationError(str(e))
+                if 'уже существует' in str(e):
+                    raise ValidationError(
+                        'Предложенный вариант короткой ссылки уже существует.'
+                    )
+                elif 'Максимум' in str(e):
+                    raise ValidationError(str(e))
+                else:
+                    raise ValidationError(
+                        'Указано недопустимое имя для короткой ссылки'
+                    )
