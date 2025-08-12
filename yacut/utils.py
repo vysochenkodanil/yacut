@@ -15,16 +15,11 @@ def get_unique_short_id(length=6):
 
 
 def validate_short_id(short_id):
-    """Проверяет корректность short_id."""
+    """Проверяет корректность short_id и возвращает текст ошибки или None"""
     if len(short_id) > MAX_LEIGHT:
-        raise ValueError(
-            'Указано недопустимое имя для короткой ссылки'
-        )
+        return 'Указано недопустимое имя для короткой ссылки'
     if not re.fullmatch(r'^[A-Za-z0-9]+$', short_id):
-        raise ValueError(
-            'Указано недопустимое имя для короткой ссылки'
-        )
+        return 'Указано недопустимое имя для короткой ссылки'
     if URLMap.query.filter_by(short=short_id).first():
-        raise ValueError(
-            'Предложенный вариант короткой ссылки уже существует.'
-        )
+        return 'Предложенный вариант короткой ссылки уже существует.'
+    return None

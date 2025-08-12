@@ -30,16 +30,6 @@ class URLForm(FlaskForm):
 
     def validate_custom_id(self, field):
         if field.data:
-            try:
-                validate_short_id(field.data)
-            except ValueError as e:
-                if 'уже существует' in str(e):
-                    raise ValidationError(
-                        'Предложенный вариант короткой ссылки уже существует.'
-                    )
-                elif 'Максимум' in str(e):
-                    raise ValidationError(str(e))
-                else:
-                    raise ValidationError(
-                        'Указано недопустимое имя для короткой ссылки'
-                    )
+            error = validate_short_id(field.data)
+            if error:
+                raise ValidationError(error)

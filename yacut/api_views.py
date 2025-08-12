@@ -25,15 +25,9 @@ def create_short_url():
 
     custom_id = data.get('custom_id')
     if custom_id:
-        try:
-            validate_short_id(custom_id)
-        except ValueError as e:
-            error_msg = str(e)
-            if 'уже существует' in error_msg:
-                error_msg = (
-                    'Предложенный вариант короткой ссылки уже существует.'
-                )
-            return jsonify({'message': error_msg}), HTTPStatus.BAD_REQUEST
+        error = validate_short_id(custom_id)
+        if error:
+            return jsonify({'message': error}), HTTPStatus.BAD_REQUEST
     else:
         custom_id = get_unique_short_id()
 
