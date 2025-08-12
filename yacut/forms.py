@@ -1,13 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import (
-    DataRequired,
-    Length,
-    Optional,
-    URL,
-    ValidationError,
-)
+from wtforms.validators import (URL, DataRequired, Length, Optional,
+                                ValidationError)
+
 from settings import MAX_LEIGHT
+
 from .utils import validate_short_id
 
 

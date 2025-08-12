@@ -6,7 +6,6 @@ from . import db
 from .models import URLMap
 from .utils import get_unique_short_id, validate_short_id
 
-
 bp_api = Blueprint('api', __name__)
 
 

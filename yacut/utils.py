@@ -1,9 +1,10 @@
-import re
 import random
+import re
 import string
 
-from .models import URLMap
 from settings import MAX_LEIGHT
+
+from .models import URLMap
 
 
 def get_unique_short_id(length=6):
